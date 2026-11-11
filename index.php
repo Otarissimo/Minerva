@@ -17,47 +17,56 @@ $horariosSemana = $horario->getHorariosSemana();
 require_once __DIR__ . '/includes/footerDinamico.php'; // rodapé: localização, mapa e pagamentos
 
 // ---------------------------------------------------------------
-// CARDÁPIO (dados de teste). Para cada item:
+// CARDÁPIO. Preços médios de referência (bares e delivery de São Paulo, nov/2026).
+// Para cada item:
 //   'foto' => 'assets/img/arquivo.jpg'  (ou null para não exibir foto)
-// O id de cada item precisa ser único.
+// O id de cada item precisa ser único (a ordem de exibição é a ordem do array).
 // ---------------------------------------------------------------
 $cardapio = [
-    ['nome' => 'Cervejas e Chopes', 'descricao' => 'Geladas na temperatura certa.', 'itens' => [
-        1 => ['nome' => 'Long neck Pilsen 355ml', 'descricao' => 'Garrafa long neck, servida gelada.', 'preco' => 9.00, 'disponivel' => true, 'foto' => null],
-        2 => ['nome' => 'Cerveja lata 350ml', 'descricao' => 'Pilsen tradicional.', 'preco' => 5.50, 'disponivel' => true, 'foto' => null],
-        3 => ['nome' => 'Garrafa 600ml', 'descricao' => 'Pilsen, ideal para dividir na mesa.', 'preco' => 12.00, 'disponivel' => true, 'foto' => null],
-        4 => ['nome' => 'Chope Pilsen 500ml', 'descricao' => 'Tirado na hora, colarinho cremoso.', 'preco' => 14.00, 'disponivel' => true, 'foto' => null],
-        5 => ['nome' => 'IPA long neck 355ml', 'descricao' => 'Lupulada, amargor médio.', 'preco' => 16.00, 'disponivel' => true, 'foto' => null],
+    ['nome' => 'Cervejas e Chopes', 'descricao' => 'Geladas na temperatura certa. Marcas sujeitas à disponibilidade do dia.', 'itens' => [
+        1 => ['nome' => 'Long neck Pilsen 355ml', 'descricao' => 'Brahma, Skol, Antarctica ou Original.', 'preco' => 13.00, 'disponivel' => true, 'foto' => null],
+        26 => ['nome' => 'Long neck premium 355ml', 'descricao' => 'Heineken, Stella Artois, Budweiser ou Corona.', 'preco' => 17.00, 'disponivel' => true, 'foto' => null],
+        2 => ['nome' => 'Cerveja lata 350ml', 'descricao' => 'Pilsen tradicional: Brahma, Skol, Antarctica ou Amstel.', 'preco' => 7.50, 'disponivel' => true, 'foto' => null],
+        3 => ['nome' => 'Garrafa 600ml', 'descricao' => 'Brahma, Skol, Antarctica ou Original.', 'preco' => 16.00, 'disponivel' => true, 'foto' => null],
+        4 => ['nome' => 'Chope Pilsen 500ml', 'descricao' => 'Brahma ou Antarctica.', 'preco' => 15.00, 'disponivel' => true, 'foto' => null],
+        27 => ['nome' => 'Chope escuro 430ml', 'descricao' => 'Brahma Black.', 'preco' => 15.00, 'disponivel' => true, 'foto' => null],
     ]],
-    ['nome' => 'Drinks e Destilados', 'descricao' => 'Doses e coquetéis clássicos da casa.', 'itens' => [
-        6 => ['nome' => 'Caipirinha', 'descricao' => 'Limão, cachaça, açúcar e gelo.', 'preco' => 18.00, 'disponivel' => true, 'foto' => null],
-        7 => ['nome' => 'Gin tônica', 'descricao' => 'Gin, água tônica, limão siciliano e alecrim.', 'preco' => 26.00, 'disponivel' => true, 'foto' => null],
-        8 => ['nome' => 'Dose de cachaça', 'descricao' => 'Cachaça artesanal envelhecida.', 'preco' => 8.00, 'disponivel' => true, 'foto' => null],
-        9 => ['nome' => 'Dose de whisky', 'descricao' => 'Whisky 8 anos, 50ml.', 'preco' => 20.00, 'disponivel' => true, 'foto' => null],
+    ['nome' => 'Drinks e Destilados', 'descricao' => 'Doses de 50ml e coquetéis clássicos da casa. Marcas sujeitas à disponibilidade.', 'itens' => [
+        6 => ['nome' => 'Caipirinha de cachaça', 'descricao' => 'Limão, cachaça Velho Barreiro ou 51, açúcar e gelo.', 'preco' => 24.00, 'disponivel' => true, 'foto' => null],
+        30 => ['nome' => 'Caipirinha de saquê', 'descricao' => 'Limão, saquê Azuma Kirin, açúcar e gelo.', 'preco' => 25.00, 'disponivel' => true, 'foto' => null],
+        29 => ['nome' => 'Caipirinha de vodka', 'descricao' => 'Limão, vodka Smirnoff ou Absolut, açúcar e gelo.', 'preco' => 26.00, 'disponivel' => true, 'foto' => null],
+        7 => ['nome' => 'Gin tônica nacional', 'descricao' => 'Gin Seagers ou Rock\'s, água tônica, limão siciliano e alecrim.', 'preco' => 26.00, 'disponivel' => true, 'foto' => null],
+        31 => ['nome' => 'Gin tônica importado', 'descricao' => 'Gin Tanqueray, Beefeater ou Bombay Sapphire, água tônica, limão siciliano e alecrim.', 'preco' => 34.00, 'disponivel' => true, 'foto' => null],
+        32 => ['nome' => 'Dose de cachaça', 'descricao' => 'Velho Barreiro ou 51, dose de 50ml.', 'preco' => 7.00, 'disponivel' => true, 'foto' => null],
+        9 => ['nome' => 'Dose de whisky Red Label', 'descricao' => 'Johnnie Walker Red Label, dose de 50ml.', 'preco' => 22.00, 'disponivel' => true, 'foto' => null],
+        33 => ['nome' => 'Dose de whisky Jack Daniel\'s', 'descricao' => 'Jack Daniel\'s Old No. 7, dose de 50ml.', 'preco' => 30.00, 'disponivel' => true, 'foto' => null],
+        36 => ['nome' => 'Dose de whisky Black Label', 'descricao' => 'Johnnie Walker Black Label, dose de 50ml.', 'preco' => 32.00, 'disponivel' => true, 'foto' => null],
     ]],
     ['nome' => 'Sem Álcool', 'descricao' => 'Para o motorista da rodada e para quem prefere leve.', 'itens' => [
-        10 => ['nome' => 'Refrigerante lata 350ml', 'descricao' => 'Cola, guaraná ou limão.', 'preco' => 6.00, 'disponivel' => true, 'foto' => null],
-        11 => ['nome' => 'Água mineral 500ml', 'descricao' => 'Com ou sem gás.', 'preco' => 4.00, 'disponivel' => true, 'foto' => null],
-        12 => ['nome' => 'Suco natural jarra 1L', 'descricao' => 'Laranja, limão, maracujá ou abacaxi com hortelã.', 'preco' => 16.00, 'disponivel' => true, 'foto' => null],
-        13 => ['nome' => 'Energético 250ml', 'descricao' => 'Lata gelada.', 'preco' => 12.00, 'disponivel' => true, 'foto' => null],
+        10 => ['nome' => 'Refrigerante lata 350ml', 'descricao' => 'Coca-Cola, Guaraná Antarctica, Fanta ou Sprite.', 'preco' => 7.00, 'disponivel' => true, 'foto' => null],
+        11 => ['nome' => 'Água mineral 500ml', 'descricao' => 'Com ou sem gás.', 'preco' => 5.00, 'disponivel' => true, 'foto' => null],
+        12 => ['nome' => 'Suco natural jarra 1L', 'descricao' => 'Laranja, limão, maracujá ou abacaxi com hortelã.', 'preco' => 22.00, 'disponivel' => true, 'foto' => null],
+        13 => ['nome' => 'Red Bull 250ml', 'descricao' => 'Sabores: Tradicional, Sem açúcar, Tropical, Melancia ou Pêssego.', 'preco' => 15.00, 'disponivel' => true, 'foto' => null],
+        35 => ['nome' => 'Monster 473ml', 'descricao' => 'Sabores: Original, Zero Açúcar, Ultra Violet, Mango Loco ou Pipeline Punch.', 'preco' => 15.00, 'disponivel' => true, 'foto' => null],
     ]],
-    ['nome' => 'Petiscos e Porções', 'descricao' => 'Para compartilhar. Porções servidas em bandeja.', 'itens' => [
-        14 => ['nome' => 'Batata frita 500g', 'descricao' => 'Crocante, com cheddar e bacon à parte.', 'preco' => 32.00, 'disponivel' => true, 'foto' => null],
-        15 => ['nome' => 'Isca de frango 500g', 'descricao' => 'Empanada, acompanha molho de mostarda e mel.', 'preco' => 38.00, 'disponivel' => true, 'foto' => null],
-        16 => ['nome' => 'Calabresa acebolada', 'descricao' => 'Calabresa artesanal, cebola e farofa.', 'preco' => 34.00, 'disponivel' => true, 'foto' => null],
-        17 => ['nome' => 'Bolinho de bacalhau (10 un)', 'descricao' => 'Massa de batata, recheio generoso.', 'preco' => 42.00, 'disponivel' => true, 'foto' => null],
-        18 => ['nome' => 'Torresmo de rolo 400g', 'descricao' => 'Sequinho por fora, macio por dentro.', 'preco' => 36.00, 'disponivel' => false, 'foto' => null],
+    ['nome' => 'Petiscos e Porções', 'descricao' => 'Para compartilhar. Porções de 500g servidas em bandeja, indicadas para 2 ou 3 pessoas.', 'itens' => [
+        14 => ['nome' => 'Batata frita 500g', 'descricao' => 'Batatas fritas em palito, servidas com cheddar e bacon à parte.', 'preco' => 35.00, 'disponivel' => true, 'foto' => null],
+        15 => ['nome' => 'Isca de frango 500g', 'descricao' => 'Tiras de peito de frango empanadas e fritas, com molho de mostarda e mel.', 'preco' => 42.00, 'disponivel' => true, 'foto' => null],
+        34 => ['nome' => 'Frango a passarinho 500g', 'descricao' => 'Pedaços de frango fritos, temperados com alho, acompanha limão.', 'preco' => 50.00, 'disponivel' => true, 'foto' => null],
+        16 => ['nome' => 'Calabresa acebolada 500g', 'descricao' => 'Rodelas de calabresa grelhada com cebola, acompanha farofa.', 'preco' => 38.00, 'disponivel' => true, 'foto' => null],
+        17 => ['nome' => 'Bolinho de bacalhau (10 un)', 'descricao' => 'Bolinhos fritos de massa de batata recheados com bacalhau desfiado.', 'preco' => 48.00, 'disponivel' => true, 'foto' => null],
+        18 => ['nome' => 'Torresmo de rolo 400g', 'descricao' => 'Barriga de porco enrolada, assada e frita.', 'preco' => 38.00, 'disponivel' => false, 'foto' => null],
     ]],
     ['nome' => 'Pratos da Casa', 'descricao' => 'Servidos das 11h às 15h e das 18h às 23h.', 'itens' => [
-        19 => ['nome' => 'Prato feito do dia', 'descricao' => 'Arroz, feijão, mistura, salada e fritas.', 'preco' => 28.00, 'disponivel' => true, 'foto' => null],
-        20 => ['nome' => 'Feijoada individual', 'descricao' => 'Com arroz, couve, farofa e laranja.', 'preco' => 36.00, 'disponivel' => true, 'foto' => null],
-        21 => ['nome' => 'Parmegiana de frango', 'descricao' => 'Filé empanado, molho, queijo, arroz e fritas.', 'preco' => 42.00, 'disponivel' => true, 'foto' => null],
-        22 => ['nome' => 'Picanha na chapa (2 pessoas)', 'descricao' => '400g de picanha, fritas, arroz e vinagrete.', 'preco' => 118.00, 'disponivel' => true, 'foto' => null],
+        19 => ['nome' => 'Prato feito do dia', 'descricao' => 'Arroz, feijão, mistura, salada e fritas.', 'preco' => 38.00, 'disponivel' => true, 'foto' => null],
+        20 => ['nome' => 'Feijoada individual', 'descricao' => 'Com arroz, couve, farofa e laranja.', 'preco' => 45.00, 'disponivel' => true, 'foto' => null],
+        21 => ['nome' => 'Parmegiana de frango', 'descricao' => 'Filé empanado, molho, queijo, arroz e fritas.', 'preco' => 46.00, 'disponivel' => true, 'foto' => null],
+        22 => ['nome' => 'Picanha na chapa (2 pessoas)', 'descricao' => '400g de picanha, fritas, arroz e vinagrete.', 'preco' => 135.00, 'disponivel' => true, 'foto' => null],
     ]],
     ['nome' => 'Sobremesas', 'descricao' => 'Para fechar a conta com açúcar.', 'itens' => [
-        23 => ['nome' => 'Pudim de leite', 'descricao' => 'Calda de caramelo.', 'preco' => 14.00, 'disponivel' => true, 'foto' => null],
-        24 => ['nome' => 'Brownie com sorvete', 'descricao' => 'Chocolate meio amargo e sorvete de creme.', 'preco' => 16.00, 'disponivel' => true, 'foto' => null],
-        25 => ['nome' => 'Petit gâteau', 'descricao' => 'Recheio cremoso de chocolate.', 'preco' => 22.00, 'disponivel' => true, 'foto' => null],
+        23 => ['nome' => 'Pudim de leite', 'descricao' => 'Pudim de leite condensado com calda de caramelo.', 'preco' => 16.00, 'disponivel' => true, 'foto' => null],
+        24 => ['nome' => 'Brownie com sorvete', 'descricao' => 'Bolo de chocolate meio amargo servido quente com bola de sorvete de creme.', 'preco' => 22.00, 'disponivel' => true, 'foto' => null],
+        25 => ['nome' => 'Petit gâteau', 'descricao' => 'Bolinho de chocolate com centro cremoso, servido quente.', 'preco' => 28.00, 'disponivel' => true, 'foto' => null],
     ]],
 ];
 
