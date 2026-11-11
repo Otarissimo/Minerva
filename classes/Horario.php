@@ -28,6 +28,22 @@ class Horario
         return $this->expedienteAtual() !== null;
     }
 
+    public function getHorariosSemana(): array
+    {
+        $semana = [];
+
+        foreach ([1, 2, 3, 4, 5, 6, 0] as $dia) {
+            $horario = $this->expediente[$dia] ?? null;
+
+            $semana[] = [
+                'dia'     => ucfirst($this->nomesDias[$dia]),
+                'horario' => $horario === null ? 'Fechado' : "{$horario[0]} às {$horario[1]}",
+            ];
+        }
+
+        return $semana;
+    }
+
     public function getStatus(): array
     {
         $agora = $this->agora();

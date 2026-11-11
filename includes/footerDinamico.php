@@ -9,12 +9,14 @@ class DynamicFooter {
     private $mapEmbedUrl;
     private $paymentMethods;
     private $paceUrl;
+    private $horarios;
 
     public function __construct(array $config) {
         $this->addressName = $config['addressName'] ?? '';
         $this->mapEmbedUrl = $config['mapEmbedUrl'] ?? '';
         $this->paymentMethods = $config['paymentMethods'] ?? [];
         $this->paceUrl = $config['paceUrl'] ?? '';
+        $this->horarios = $config['horarios'] ?? [];
     }
 
     private static function e(string $v): string {
@@ -38,6 +40,11 @@ class DynamicFooter {
             );
         }
 
+        $horariosHTML = '';
+        foreach ($this->horarios as $h) {
+            $horariosHTML .= sprintf('<li><span>%s</span><span>%s</span></li>', self::e($h['dia']), self::e($h['horario']));
+        }
+
         $addr = self::e($this->addressName);
         $map = self::e($this->mapEmbedUrl);
         $pace = $this->paceUrl !== ''
@@ -57,6 +64,11 @@ class DynamicFooter {
         <a class="btn contorno" href="{$linkMaps}" target="_blank" rel="noopener">Abrir no Google Maps</a>
         <a class="btn contorno" href="{$linkWaze}" target="_blank" rel="noopener">Abrir no Waze</a>
       </div>
+    </div>
+
+    <div class="footer-section horarios">
+      <h3>🕒 Horário de Funcionamento</h3>
+      <ul>{$horariosHTML}</ul>
     </div>
 
     <div class="footer-section payments">
@@ -82,7 +94,9 @@ $footerData = [
         ['name' => 'Mastercard', 'icon' => 'https://img.icons8.com/color/48/mastercard.png']
     ],
     // Botão "Produzido por Pace" (vem da variável $urlPace do index.php)
-    'paceUrl' => $urlPace ?? ''
+    'paceUrl' => $urlPace ?? '',
+    // Horário da semana (vem do Horario.php, via $horariosSemana do index.php)
+    'horarios' => $horariosSemana ?? []
 ];
 
 $myFooter = new DynamicFooter($footerData);
