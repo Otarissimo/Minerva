@@ -4,54 +4,58 @@
  * Footer dinâmico (localização com mapa + formas de pagamento).
  * Autor: Thiago. Integrado ao cardápio: use $myFooter->render() onde o rodapé deve aparecer.
  */
-class DynamicFooter {
-    private $addressName;
-    private $mapEmbedUrl;
-    private $paymentMethods;
-    private $paceUrl;
-    private $horarios;
+class DynamicFooter
+{
+  private $addressName;
+  private $mapEmbedUrl;
+  private $paymentMethods;
+  private $paceUrl;
+  private $horarios;
 
-    public function __construct(array $config) {
-        $this->addressName = $config['addressName'] ?? '';
-        $this->mapEmbedUrl = $config['mapEmbedUrl'] ?? '';
-        $this->paymentMethods = $config['paymentMethods'] ?? [];
-        $this->paceUrl = $config['paceUrl'] ?? '';
-        $this->horarios = $config['horarios'] ?? [];
+  public function __construct(array $config)
+  {
+    $this->addressName = $config['addressName'] ?? '';
+    $this->mapEmbedUrl = $config['mapEmbedUrl'] ?? '';
+    $this->paymentMethods = $config['paymentMethods'] ?? [];
+    $this->paceUrl = $config['paceUrl'] ?? '';
+    $this->horarios = $config['horarios'] ?? [];
+  }
+
+  private static function e(string $v): string
+  {
+    return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
+  }
+
+  public function render(): void
+  {
+    $year = date('Y');
+    $endereco = urlencode($this->addressName);
+    $linkMaps = 'https://www.google.com/maps/search/?api=1&query=' . $endereco;
+    $linkWaze = 'https://waze.com/ul?q=' . $endereco . '&navigate=yes';
+
+    $paymentsHTML = '';
+    foreach ($this->paymentMethods as $method) {
+      $paymentsHTML .= sprintf(
+        '<li class="payment-item"><img src="%s" alt="%s" title="%s" width="32" height="32" loading="lazy"><span>%s</span></li>',
+        self::e($method['icon']),
+        self::e($method['name']),
+        self::e($method['name']),
+        self::e($method['name'])
+      );
     }
 
-    private static function e(string $v): string {
-        return htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
+    $horariosHTML = '';
+    foreach ($this->horarios as $h) {
+      $horariosHTML .= sprintf('<li><span>%s</span><span>%s</span></li>', self::e($h['dia']), self::e($h['horario']));
     }
 
-    public function render(): void {
-        $year = date('Y');
-        $endereco = urlencode($this->addressName);
-        $linkMaps = 'https://www.google.com/maps/search/?api=1&query=' . $endereco;
-        $linkWaze = 'https://waze.com/ul?q=' . $endereco . '&navigate=yes';
+    $addr = self::e($this->addressName);
+    $map = self::e($this->mapEmbedUrl);
+    $pace = $this->paceUrl !== ''
+      ? 'Desenvolvido por <a href="' . self::e($this->paceUrl) . '" target="_blank" rel="noopener" style="color: var(--caramelo); text-decoration: underline;">Pace Tecnologia</a>'
+      : '';
 
-        $paymentsHTML = '';
-        foreach ($this->paymentMethods as $method) {
-            $paymentsHTML .= sprintf(
-                '<li class="payment-item"><img src="%s" alt="%s" title="%s" width="32" height="32" loading="lazy"><span>%s</span></li>',
-                self::e($method['icon']),
-                self::e($method['name']),
-                self::e($method['name']),
-                self::e($method['name'])
-            );
-        }
-
-        $horariosHTML = '';
-        foreach ($this->horarios as $h) {
-            $horariosHTML .= sprintf('<li><span>%s</span><span>%s</span></li>', self::e($h['dia']), self::e($h['horario']));
-        }
-
-        $addr = self::e($this->addressName);
-        $map = self::e($this->mapEmbedUrl);
-        $pace = $this->paceUrl !== ''
-            ? '<a class="pace" href="' . self::e($this->paceUrl) . '">Produzido por Pace</a>'
-            : '';
-
-        echo <<<HTML
+    echo <<<HTML
 <footer class="site-footer">
   <div class="footer-content">
     <div class="footer-section location">
@@ -82,21 +86,21 @@ class DynamicFooter {
   </div>
 </footer>
 HTML;
-    }
+  }
 }
 
 $footerData = [
-    'addressName' => 'Rua Aracê, 449 - Vila Formosa, São Paulo - SP, 03362-050',
-    'mapEmbedUrl' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.162517131451!2d-46.545271323914214!3d-23.562605961639427!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5ddb1e3d26a7%3A0xc6e8d7493fefdf81!2sRua%20Arac%C3%AA%2C%20449%20-%20Vila%20Formosa%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2003362-050!5e0!3m2!1spt-BR!2sbr!4v1792537519193!5m2!1spt-BR!2sbr',
-    'paymentMethods' => [
-        ['name' => 'Pix', 'icon' => 'https://img.icons8.com/color/48/pix.png'],
-        ['name' => 'Visa', 'icon' => 'https://img.icons8.com/color/48/visa.png'],
-        ['name' => 'Mastercard', 'icon' => 'https://img.icons8.com/color/48/mastercard.png']
-    ],
-    // Botão "Produzido por Pace" (vem da variável $urlPace do index.php)
-    'paceUrl' => $urlPace ?? '',
-    // Horário da semana (vem do Horario.php, via $horariosSemana do index.php)
-    'horarios' => $horariosSemana ?? []
+  'addressName' => 'Rua Aracê, 449 - Vila Formosa, São Paulo - SP, 03362-050',
+  'mapEmbedUrl' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.162517131451!2d-46.545271323914214!3d-23.562605961639427!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce5ddb1e3d26a7%3A0xc6e8d7493fefdf81!2sRua%20Arac%C3%AA%2C%20449%20-%20Vila%20Formosa%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2003362-050!5e0!3m2!1spt-BR!2sbr!4v1792537519193!5m2!1spt-BR!2sbr',
+  'paymentMethods' => [
+    ['name' => 'Pix', 'icon' => 'https://img.icons8.com/color/48/pix.png'],
+    ['name' => 'Visa', 'icon' => 'https://img.icons8.com/color/48/visa.png'],
+    ['name' => 'Mastercard', 'icon' => 'https://img.icons8.com/color/48/mastercard.png']
+  ],
+  // URL da Pace
+  'paceUrl' => 'https://pacetecnologia.simplifica.gru.br/',
+  // Horário da semana (vem do Horario.php, via $horariosSemana do index.php)
+  'horarios' => $horariosSemana ?? []
 ];
 
 $myFooter = new DynamicFooter($footerData);

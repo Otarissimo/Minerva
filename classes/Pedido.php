@@ -1,27 +1,20 @@
 <?php
-ini_set('default_charset', 'UTF-8');
 
-require_once 'Carrinho.php';
+declare(strict_types=1);
+
+require_once __DIR__ . '/Carrinho.php';
 
 class Pedido
 {
     private Carrinho $carrinho;
     private string $codigoPedido;
-    private string $telefoneLanchonete = "---";
+    private string $telefoneLanchonete = "551127854260";
 
 
     public function __construct(Carrinho $carrinho)
     {
         $this->carrinho = $carrinho;
-        $this->codigoPedido = $this->gerarCodigo();
-    }
-
-    /**
-     * Gera um código identificador aleatório de 4 dígitos para o pedido
-     */
-    private function gerarCodigo(): string
-    {
-        return '#' . rand(1000, 9999);
+        $this->codigoPedido = '#' . random_int(1000, 9999);
     }
 
     /**
@@ -32,60 +25,76 @@ class Pedido
         return $this->codigoPedido;
     }
 
-
     /**
-     * Gera o link do WhatsApp
+     * Gera a mensagem formatada para o WhatsApp
      */
     public function gerarMensagemWhatsApp(array $dadosCliente, string $codigoPedido): string
     {
-        $emojiHambuerguer  = "\u{1F354}";
-        $emojiCliente      = "\u{1F464}";
-        $emojiCarrinho     = "\u{1F6D2}";
-        $emojiSacoDinheiro = "\u{1F4B0}";
-        $emojiRelogio      = "\u{1F552}";
-        $bullet            = "\u{2022}";
+        $agora    = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
+        $dataHora = $agora->format('d/m/Y') . ' às ' . $agora->format('H:i');
 
-        $dataHora = (new DateTime('now', new DateTimeZone('America/Sao_Paulo')))->format('d/m/Y \à\s H:i');
+        $eBurger   = "\u{1F354}"; // 🍔
+        $eRelogio  = "\u{1F552}"; // 🕒
+        $eCliente  = "\u{1F464}"; // 👤
+        $eCarrinho = "\u{1F6D2}"; // 🛒
+        $eDinheiro = "\u{1F4B0}"; // 💰
+        $bolinha   = "\u{2022}";  // •
+        $travessao = "\u{2014}";  // —
+        $linha     = str_repeat("\u{2501}", 19);
 
-        $texto = "{$emojiHambuerguer} *PEDIDO {$codigoPedido}* {$emojiHambuerguer}\n";
-        $texto .= "{$emojiRelogio} {$dataHora}\n";
-        $texto .= "━━━━━━━━━━━━━━━━━━━\n\n";
+        $t  = "{$eBurger} *PEDIDO {$codigoPedido}* {$eBurger}\n";
+        $t .= "{$eRelogio} {$dataHora}\n";
+        $t .= "{$linha}\n\n";
 
-        // Dados do Cliente
-        $texto .= "{$emojiCliente} *DADOS DO CLIENTE*\n";
-        $texto .= "{$bullet} *Nome:* " . trim($dadosCliente['nome']) . "\n";
+         // Dados do cliente
+        $t .= "{$eCliente} *DADOS DO CLIENTE*\n";
+        $t .= "{$bolinha} *Nome:* " . trim($dadosCliente['nome']) . "\n";
 
         if ($dadosCliente['tipo_entrega'] === 'entrega') {
-            $texto .= "{$bullet} *Tipo:* Entrega em Casa\n";
+            $t .= "{$bolinha} *Tipo:* Entrega em Casa\n";
 
-            $endereco = trim($dadosCliente['rua']) . ", Nº " . trim($dadosCliente['numero']);
+            $endereco = trim($dadosCliente['rua']) . ', Nº ' . trim($dadosCliente['numero']);
             if (!empty($dadosCliente['complemento'])) {
-                $endereco .= " (" . trim($dadosCliente['complemento']) . ")";
+                $endereco .= ' (' . trim($dadosCliente['complemento']) . ')';
             }
-            $endereco .= " - Bairro: " . trim($dadosCliente['bairro']);
-            $endereco .= " - " . trim($dadosCliente['cidade']);
+            $endereco .= ' - Bairro: ' . trim($dadosCliente['bairro']);
+            $endereco .= ' - ' . trim($dadosCliente['cidade']);
 
-            $texto .= "{$bullet} *Endereço:* " . $endereco . "\n";
+            $t .= "{$bolinha} *Endereço:* {$endereco}\n";
         } else {
-            $texto .= "{$bullet} *Tipo:* Retirada no Local\n";
+            $t .= "{$bolinha} *Tipo:* Retirada no Local\n";
         }
 
-        $texto .= "{$bullet} *Pagamento:* " . $dadosCliente['pagamento'] . "\n\n";
+        $t .= "{$bolinha} *Pagamento:* " . $dadosCliente['pagamento'] . "\n";
 
-        // Itens do Pedido
-        $texto .= "{$emojiCarrinho} *RESUMO DOS ITENS*\n";
+         // Troco (apenas dinheiro)
+        if (strcasecmp($dadosCliente['pagamento'], 'Dinheiro') === 0) {
+            $troco = trim($dadosCliente['troco'] ?? '');
+            $t .= $troco === ''
+                ? "{$bolinha} *Troco:* Não precisa de troco\n"
+                : "{$bolinha} *Troco:* Para {$troco}\n";
+        }
+
+        // Itens
+        $t .= "\n{$eCarrinho} *RESUMO DOS ITENS*\n";
         foreach ($this->carrinho->getItens() as $item) {
-            $precoUnitario = number_format($item['preco'], 2, ',', '.');
-            $subtotalItem = number_format($item['preco'] * $item['quantidade'], 2, ',', '.');
-            $texto .= "{$bullet} {$item['quantidade']}x {$item['nome']} (R$ {$precoUnitario} un.) — *R$ {$subtotalItem}*\n";
+            $unit = number_format((float)$item['preco'], 2, ',', '.');
+            $subt = number_format((float)$item['preco'] * (int)$item['quantidade'], 2, ',', '.');
+            $t .= "{$bolinha} {$item['quantidade']}x {$item['nome']} (R$ {$unit} un.) {$travessao} *R$ {$subt}*\n";
         }
 
-        // Valor Total
-        $total = number_format($this->carrinho->calcularTotal(), 2, ',', '.');
-        $texto .= "\n━━━━━━━━━━━━━━━━━━━\n";
-        $texto .= "{$emojiSacoDinheiro} *TOTAL A PAGAR:* R$ " . $total;
+        // Observação (opcional)
+        $obs = trim($dadosCliente['observacao'] ?? '');
+        if ($obs !== '') {
+            $t .= "{$bolinha} *Observações:* {$obs}\n";
+        }
 
-        return $texto;
+        // Total
+        $total = number_format((float)$this->carrinho->calcularTotal(), 2, ',', '.');
+        $t .= "\n{$linha}\n";
+        $t .= "{$eDinheiro} *TOTAL A PAGAR:* R$ {$total}";
+
+        return $t;
     }
 
     public function gerarLinkWhatsApp(array $dadosCliente, ?string $codigoPedido = null): string
@@ -93,6 +102,6 @@ class Pedido
         $mensagem = $this->gerarMensagemWhatsApp($dadosCliente, $codigoPedido ?? $this->codigoPedido);
         $telefone = preg_replace('/\D/', '', $this->telefoneLanchonete);
 
-        return "https://wa.me/{$telefone}?text=" . rawurlencode($mensagem);
+        return "https://api.whatsapp.com/send?phone={$telefone}&text=" . rawurlencode($mensagem);
     }
 }

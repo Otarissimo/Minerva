@@ -32,13 +32,13 @@ class Carrinho
     }
 
     /**
-     * Atualiza a quantidade de um item específico.
+     * Decrementa a quantidade em 1. Se for 1, remove o item.
      */
-    public function atualizarQuantidade(int $id, int $quantidade): void
+    public function decrementar(int $id): void
     {
         if (isset($this->itens[$id])) {
-            if ($quantidade > 0) {
-                $this->itens[$id]['quantidade'] = $quantidade;
+            if ($this->itens[$id]['quantidade'] > 1) {
+                $this->itens[$id]['quantidade']--;
             } else {
                 $this->remover($id);
                 return;
